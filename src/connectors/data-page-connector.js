@@ -10,8 +10,19 @@ const contextQuery = gql`
                 Lumber
                 CreaturesCost
                 Housing
+                CreatureCount
                 Creatures {
                     Sex
+                    Action
+                    Stats {
+                        Age
+                        Longevity
+                        Agility
+                        Strength
+                        Intellect
+                        EpiceneChance
+                        MultiBirthChance
+                    }
                 }
             }
         }

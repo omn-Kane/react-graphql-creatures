@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import LandingPage from '../components/landing-page';
+import DataPage from '../containers/data-page/data-page';
 import CreaturesGraphql from '../connectors/creatures-graphql';
 import connector from '../connectors/app-connector';
 
@@ -18,7 +18,7 @@ class AppContainer extends PureComponent {
                         <input type='button' value='Up' onClick={(e) => this.up()} />
                         <input type='button' value='Down' onClick={(e) => this.down()} />
                     </div>
-                    {this.props.session ? <LandingPage Session={this.props.session} Day={this.props.day} setMaxDay={this.props.setMaxDay}/> : null}
+                    {this.props.session ? <DataPage Session={this.props.session} Day={this.props.day} setMaxDay={this.props.setMaxDay}/> : null}
                 </div>
             </CreaturesGraphql>
         );
