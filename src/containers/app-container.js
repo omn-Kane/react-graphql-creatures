@@ -8,9 +8,6 @@ class AppContainer extends PureComponent {
         return (
             <CreaturesGraphql>
                 <div className="App">
-                    <div className="App-header">
-                        <h2>Welcome to MAH WORLD!</h2>
-                    </div>
                     <input type='text' placeholder='Session' ref={(ref) => this.sessionInput = ref} />
                     <input type='button' value='Submit' onClick={(e) => this.submit()} />
                     <div>

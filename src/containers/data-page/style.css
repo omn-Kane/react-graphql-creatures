@@ -31,6 +31,12 @@ tr>td:first-child {
 tr>.small {
     width: 37px;
 }
+tr>.scroller {
+    width: 13px;
+}
+tr>.edge {
+    border-right: 0 solid #ddd;
+}
 thead>tr {
     position: relative;
     height: 133px;
@@ -41,10 +47,11 @@ thead>tr>td {
     border-bottom: 1px solid #ddd;
 }
 .scroller-y {
+    position: absolute;
     display: block;
     overflow-y: scroll;
-    height: 100%;
-    width: 1005px;
+    height: 500px;
+    /*width: 1005px;*/
 }
 .resources {
     width: 1005px;

@@ -26,7 +26,7 @@ const DataPage = ({ data: {loading, error, Context }, Day, setMaxDay}) => {
             <table className="table">
                 <thead className="tableheader">
                     <tr>
-                        <td className="medium">Sex</td>
+                        <td>Sex</td>
                         <td className="small"><div className="verticalText">Age</div></td>
                         <td className="small"><div className="verticalText">Longevity</div></td>
                         <td className="small"><div className="verticalText">Farming</div></td>
@@ -34,10 +34,11 @@ const DataPage = ({ data: {loading, error, Context }, Day, setMaxDay}) => {
                         <td className="small"><div className="verticalText">Constructing</div></td>
                         <td className="small"><div className="verticalText">Epicene Chance</div></td>
                         <td className="small"><div className="verticalText">Multi Birth Chance</div></td>
-                        <td>Current Action</td>
+                        <td className="edge">Current Action</td>
+                        <td className="scroller"></td>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="scroller-y">
                     {Context.Play.Creatures.map((props) => <Creature {...props}/>)}
                 </tbody>
             </table>
