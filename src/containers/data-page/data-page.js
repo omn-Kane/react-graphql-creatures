@@ -1,9 +1,9 @@
 import React from 'react';
 import './style.css'
-import Creature from '../../components/creature';
+import Creatures from '../../components/creatures';
 import connector from '../../connectors/data-page-connector';
 
-const DataPage = ({ data: {loading, error, Context }, Day, setMaxDay}) => {
+const DataPage = ({ data: {loading, error, Context }, Session, Day, setMaxDay}) => {
     if (loading) return <p>Loading ...</p>;
     if (error) return <p>{error.message}</p>;
     if (Day === 0 && Context.Day !== 0) setMaxDay(Context.Day);
@@ -38,9 +38,7 @@ const DataPage = ({ data: {loading, error, Context }, Day, setMaxDay}) => {
                         <td className="scroller"></td>
                     </tr>
                 </thead>
-                <tbody className="scroller-y">
-                    {Context.Play.Creatures.map((props) => <Creature {...props}/>)}
-                </tbody>
+                <Creatures Session={Session} Day={Day} creatureCount={Context.Play.CreatureCount}/>
             </table>
         </div>
     );
