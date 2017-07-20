@@ -27,30 +27,34 @@ const options = {
     options(props) {
         return {
             variables: {
-                ...props,
+                Session: props.Session,
+                Day: props.Day,
                 Offset: 0,
                 Limit: 10,
             },
-            fetchPolicy: 'network-only',
+            fetchPolicy: 'network-only', // See http://dev.apollodata.com/react/api-queries.html#graphql-config-options-fetchPolicy
         };
     },
     props({data}) {
-        console.log('WOOT', data);
+        console.log('New Data Loading');
         let fetchMoreCreatures = () => {};
         if (data.Context) {
-            fetchMoreCreatures = data.fetchMore.bind(data.fetchMore, {
-                variables: {
-                    Offset: data.Context.Play.Creatures.length,
-                },
-                updateQuery: (previousResult, {fetchMoreResult}) => {
-                    console.log('WOOT2', previousResult, fetchMoreResult);
-                    if (!fetchMoreResult) return previousResult;
-                    let newThing = {...previousResult, ...fetchMoreResult};
-                    newThing.Context.Play.Creatures = [...previousResult.Context.Play.Creatures, ...fetchMoreResult.Context.Play.Creatures]
-                    return newThing;
-                },
-            });
+            fetchMoreCreatures = () => {
+                data.fetchMore({
+                    variables: {
+                        Offset: data.Context.Play.Creatures.length,
+                    },
+                    updateQuery: (previousResult, {fetchMoreResult}) => {
+                        console.log('Updating Existing Data');
+                        if (!fetchMoreResult) return previousResult;
+                        let newThing = {...previousResult, ...fetchMoreResult};
+                        newThing.Context.Play.Creatures = [...previousResult.Context.Play.Creatures, ...fetchMoreResult.Context.Play.Creatures]
+                        return newThing;
+                    },
+                });
+            };
         }
+        
         return {
             data: {
                 ...data,

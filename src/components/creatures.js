@@ -10,7 +10,7 @@ class Creatures extends PureComponent {
     render() {
         const { data: { loading, error, Context } } = this.props;
 
-        if (loading) return <tbody key="tbody" className="scroller-y"><tr><td>Loading ...</td></tr></tbody>;
+        if (loading && !Context) return <tbody key="tbody" className="scroller-y"><tr><td>Loading ...</td></tr></tbody>;
         if (error) return <tbody key="tbody" className="scroller-y"><tr><td>{error.message}</td></tr></tbody>;
 
         const creatures = Context.Play.Creatures.map((creature, index) =>
@@ -49,9 +49,9 @@ class Creatures extends PureComponent {
         }
     }
 
-    handleScroll(e) {
-        if (e.target.scrollTop + e.target.offsetHeight === e.target.scrollHeight) {
-            console.log('NOW!');
+    handleScroll({target: {scrollTop, offsetHeight, scrollHeight}}) {
+        if (this.props.data.Context.Play.Creatures.length !== this.props.creatureCount && scrollTop + offsetHeight === scrollHeight) {
+            console.log('Load More');
             this.props.data.fetchMoreCreatures();
         }
     }
