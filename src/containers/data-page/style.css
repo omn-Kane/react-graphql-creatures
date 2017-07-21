@@ -35,6 +35,7 @@ tr>.scroller {
     width: 13px;
 }
 tr>.edge {
+    width: 400px;
     border-right: 0 solid #ddd;
 }
 thead>tr {
@@ -51,7 +52,7 @@ thead>tr>td {
     display: block;
     overflow-y: scroll;
     height: 450px;
-    width: 602px;
+    width: 1005px;
 }
 .resources {
     width: 1005px;
@@ -72,7 +73,7 @@ thead>tr>td {
     height: 40px;
     text-align: center;
 }
-.end-day-button>a {
+.end-day-button>span {
     background-color: grey;
     color: blue;
     text-decoration: none;
@@ -83,6 +84,7 @@ thead>tr>td {
 .end-day-button>:hover {
     background-color: LightGrey;
     color: black;
+    cursor: pointer;
 }
 .actionshead {
     width: 415px;

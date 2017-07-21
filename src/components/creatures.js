@@ -8,12 +8,12 @@ class Creatures extends PureComponent {
     }
 
     render() {
-        const { data: { loading, error, Context } } = this.props;
+        const { data: { loading, error, Creatures } } = this.props;
 
-        if (loading && !Context) return <tbody key="tbody" className="scroller-y"><tr><td>Loading ...</td></tr></tbody>;
+        if (loading && !Creatures) return <tbody key="tbody" className="scroller-y"><tr><td>Loading ...</td></tr></tbody>;
         if (error) return <tbody key="tbody" className="scroller-y"><tr><td>{error.message}</td></tr></tbody>;
 
-        const creatures = Context.Play.Creatures.map((creature, index) =>
+        const creatures = Creatures.map((creature, index) =>
             <tr key={`creature-${creature.ID}`}>
                 <td className="medium">{creature.Sex}</td>
                 <td className="small">{creature.Stats.Age}</td>
@@ -24,6 +24,20 @@ class Creatures extends PureComponent {
                 <td className="small">{creature.Stats.EpiceneChance}</td>
                 <td className="small">{creature.Stats.MultiBirthChance}</td>
                 <td><span>{creature.Action}</span></td>
+                <td className="actions">
+                    {
+                        creature.Stats.Age > 2 && this.props.allowActions ?
+                        <div>
+                            <input type="button" value="Nothing" onClick={() => this.setInstruction(this.props.Session, creature.ID, 'Nothing')}/>
+                            <input type="button" value="Breed" onClick={() => this.setInstruction(this.props.Session, creature.ID, 'Breeding')}/>
+                            <input type="button" value="Farm" onClick={() => this.setInstruction(this.props.Session, creature.ID, 'Farming')}/>
+                            <input type="button" value="Lumberjack" onClick={() => this.setInstruction(this.props.Session, creature.ID, 'Lumberjacking')}/>
+                            <input type="button" value="Construct" onClick={() => this.setInstruction(this.props.Session, creature.ID, 'Constructing')}/>
+                            <input type="button" value="Sell" onClick={() => this.setInstruction(this.props.Session, creature.ID, 'Sell')}/>
+                        </div>
+                        : null
+                    }
+                </td>
             </tr>
         );
 
@@ -44,16 +58,20 @@ class Creatures extends PureComponent {
 
     componentWillUpdate(nextProps) {
         // This will add more creatures if you have more than 10 creatures and the current number of creatures loaded is 10
-        if (nextProps.creatureCount > 10 && nextProps.data.Context && nextProps.data.Context.Play.Creatures.length === 10) {
+        if (nextProps.creatureCount > 10 && nextProps.data.Creatures && nextProps.data.Creatures.length === 10) {
             nextProps.data.fetchMoreCreatures();
         }
     }
 
     handleScroll({target: {scrollTop, offsetHeight, scrollHeight}}) {
-        if (this.props.data.Context.Play.Creatures.length !== this.props.creatureCount && scrollTop + offsetHeight === scrollHeight) {
+        if (this.props.data.Creatures.length !== this.props.creatureCount && scrollTop + offsetHeight === scrollHeight) {
             console.log('Load More');
             this.props.data.fetchMoreCreatures();
         }
+    }
+
+    setInstruction(args) {
+        this.props.data.setInstruction(args);
     }
 };
 

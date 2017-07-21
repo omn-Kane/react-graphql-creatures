@@ -21,3 +21,6 @@ body {
 .App-intro {
     font-size: large;
 }
+.spacer {
+    margin-bottom: 20px;
+}

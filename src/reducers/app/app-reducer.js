@@ -11,17 +11,20 @@ export default function appStore(state = initialState, action = {}) {
         case constants.UPDATE_SESSION:
             return {
                 ...state,
-                session: action.session
+                session: action.session,
+                day: 0,
+                maxDay: 0,
             };
         case constants.UPDATE_DAY:
             return {
                 ...state,
-                day: action.day
+                day: action.day,
             };
         case constants.SET_MAX_DAY:
             return {
                 ...state,
-                maxDay: action.maxDay
+                day: action.maxDay,
+                maxDay: action.maxDay,
             };
         default:
             return state;

@@ -1,23 +1,19 @@
 import {gql, graphql} from 'react-apollo';
 
 const contextQuery = gql`
-    query Context($Session: String!, $Day: Int!, $Offset: Int!, $Limit: Int!) {
-        Context(Session: $Session, Day: $Day) {
-            Play {
-                Creatures(Offset: $Offset, Limit: $Limit) {
-                    ID
-                    Sex
-                    Action
-                    Stats {
-                        Age
-                        Longevity
-                        Agility
-                        Strength
-                        Intellect
-                        EpiceneChance
-                        MultiBirthChance
-                    }
-                }
+    query Creatures($Session: String!, $Day: Int!, $Offset: Int!, $Limit: Int!) {
+        Creatures(Session: $Session, Day: $Day, Offset: $Offset, Limit: $Limit) {
+            ID
+            Sex
+            Action
+            Stats {
+                Age
+                Longevity
+                Agility
+                Strength
+                Intellect
+                EpiceneChance
+                MultiBirthChance
             }
         }
     }
@@ -42,19 +38,19 @@ const options = {
             fetchMoreCreatures = () => {
                 data.fetchMore({
                     variables: {
-                        Offset: data.Context.Play.Creatures.length,
+                        Offset: data.Creatures.length,
                     },
                     updateQuery: (previousResult, {fetchMoreResult}) => {
                         console.log('Updating Existing Data');
                         if (!fetchMoreResult) return previousResult;
                         let newThing = {...previousResult, ...fetchMoreResult};
-                        newThing.Context.Play.Creatures = [...previousResult.Context.Play.Creatures, ...fetchMoreResult.Context.Play.Creatures]
+                        newThing.Creatures = [...previousResult.Creatures, ...fetchMoreResult.Creatures]
                         return newThing;
                     },
                 });
             };
         }
-        
+
         return {
             data: {
                 ...data,

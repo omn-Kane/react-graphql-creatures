@@ -15,7 +15,12 @@ class AppContainer extends PureComponent {
                         <input type='button' value='Up' onClick={(e) => this.up()} />
                         <input type='button' value='Down' onClick={(e) => this.down()} />
                     </div>
-                    {this.props.session ? <DataPage Session={this.props.session} Day={this.props.day} setMaxDay={this.props.setMaxDay}/> : null}
+                    <div className="spacer"></div>
+                    {
+                        this.props.session ?
+                        <DataPage Session={this.props.session} Day={this.props.day} setMaxDay={this.props.setMaxDay} maxDay={this.props.maxDay}/>
+                        : null
+                    }
                 </div>
             </CreaturesGraphql>
         );
