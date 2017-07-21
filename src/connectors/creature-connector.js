@@ -9,9 +9,8 @@ const creaturesQuery = gql`
             Stats {
                 Age
                 Longevity
-                Agility
-                Strength
-                Intellect
+                Farming
+                Lumberjacking
                 EpiceneChance
                 MultiBirthChance
             }

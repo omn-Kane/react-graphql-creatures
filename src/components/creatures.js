@@ -22,9 +22,8 @@ class Creatures extends PureComponent {
                 <td className="medium">{creature.Sex}</td>
                 <td className="small">{creature.Stats.Age}</td>
                 <td className="small">{creature.Stats.Longevity}</td>
-                <td className="small">{creature.Stats.Agility}</td>
-                <td className="small">{creature.Stats.Strength}</td>
-                <td className="small">{creature.Stats.Intellect}</td>
+                <td className="small">{creature.Stats.Farming}</td>
+                <td className="small">{creature.Stats.Lumberjacking}</td>
                 <td className="small">{creature.Stats.EpiceneChance}</td>
                 <td className="small">{creature.Stats.MultiBirthChance}</td>
                 <td><span>{creature.Action}</span></td>
@@ -79,6 +78,7 @@ class Creatures extends PureComponent {
     }
 
     setAction(ID, Action) {
+        console.log('WOOT', this.props.Session, this.props.Day)
         this.props.setAction(this.props.Session, this.props.Day, ID, Action).then((res) => {
             const newCreatures = this.state.data.Creatures.map((creature) => {
                 if (creature.ID !== ID) return creature;

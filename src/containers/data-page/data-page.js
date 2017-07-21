@@ -4,7 +4,7 @@ import Creatures from '../../components/creatures';
 
 class DataPage extends PureComponent {
     render() {
-        const { data: {loading, error, Context }, Session, Day } = this.props;
+        const { data: {loading, error, Context } } = this.props;
         if (loading) return <p>Loading ...</p>;
         if (error) return <p>{error.message}</p>;
 
@@ -32,7 +32,6 @@ class DataPage extends PureComponent {
                             <td className="small"><div className="verticalText">Longevity</div></td>
                             <td className="small"><div className="verticalText">Farming</div></td>
                             <td className="small"><div className="verticalText">Lumberjacking</div></td>
-                            <td className="small"><div className="verticalText">Constructing</div></td>
                             <td className="small"><div className="verticalText">Epicene Chance</div></td>
                             <td className="small"><div className="verticalText">Multi Birth Chance</div></td>
                             <td>Current Action</td>
@@ -40,7 +39,7 @@ class DataPage extends PureComponent {
                             <td className="scroller"></td>
                         </tr>
                     </thead>
-                    <Creatures Session={Session} Day={Day} creatureCount={Context.Play.CreatureCount} allowActions={Context.Day === this.props.MaxDay} />
+                    <Creatures Session={Context.Session} Day={Context.Day} creatureCount={Context.Play.CreatureCount} allowActions={Context.Day === this.props.MaxDay} />
                 </table>
             </div>
         );

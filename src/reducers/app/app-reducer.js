@@ -1,7 +1,7 @@
 import * as constants from '../constants';
 
 const initialState = {
-    session: "YyXOqB8QhMqEm2Pz",
+    session: "",
     day: 0,
 };
 

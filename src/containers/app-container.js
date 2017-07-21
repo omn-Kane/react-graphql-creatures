@@ -8,8 +8,9 @@ class AppContainer extends PureComponent {
         this.endDay = this.endDay.bind(this);
 
         this.state = {
+            Session: props.Session,
             Day: props.Day,
-            MaxDay: props.MaxDay,
+            MaxDay: 0,
             data: props.data,
         };
     }
@@ -25,7 +26,7 @@ class AppContainer extends PureComponent {
                     <input type='button' value='Down' onClick={(e) => this.down()} />
                 </div>
                 <div className="spacer"></div>
-                {this.props.Session ? <DataPage {...this.props} {...this.state} endDay={this.endDay}/> : null}
+                {this.state.Session ? <DataPage {...this.props} {...this.state} endDay={this.endDay}/> : null}
             </div>
         );
     }
@@ -33,6 +34,7 @@ class AppContainer extends PureComponent {
     componentWillReceiveProps(nextProps) {
         if (nextProps.data && nextProps.data !== this.props.data) this.setState({data: nextProps.data});
         if (nextProps.Day !== this.state.Day) this.setState({Day: nextProps.Day});
+        if (nextProps.data && nextProps.data.Context && nextProps.data.Context.Session !== this.state.Session) this.setState({Session: nextProps.data.Context.Session});
     }
 
     componentDidUpdate() {

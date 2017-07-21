@@ -19,7 +19,7 @@ const fragments = {
 };
 
 const contextQuery = gql`
-    query Context($Session: String!, $Day: Int!) {
+    query Context($Session: String, $Day: Int) {
         Context(Session: $Session, Day: $Day) {
             ...DataPage
         }
