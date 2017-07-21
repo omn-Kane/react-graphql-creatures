@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import DataPage from '../containers/data-page/data-page';
+import Automator from '../containers/automator-container';
 import connector from '../connectors/app-connector';
 
 class AppContainer extends PureComponent {
@@ -26,6 +27,8 @@ class AppContainer extends PureComponent {
                     <input type='button' value='Down' onClick={(e) => this.down()} />
                 </div>
                 <div className="spacer"></div>
+                <Automator {...this.props} {...this.state} endSeason={this.endSeason}/>
+                <div className="spacer"></div>
                 {this.state.Session ? <DataPage {...this.props} {...this.state} endSeason={this.endSeason}/> : null}
             </div>
         );
@@ -37,13 +40,14 @@ class AppContainer extends PureComponent {
         if (nextProps.data && nextProps.data.Context && nextProps.data.Context.Session !== this.state.Session) this.setState({Session: nextProps.data.Context.Session});
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
         if (this.state.Season === 0 && this.state.data.Context.Season !== 0) this.setState({MaxSeason: this.state.data.Context.Season});
     }
 
     endSeason(Session, Season) {
         this.props.endSeason(Session, Season).then((res) => {
             this.setState({
+                Session: res.data.EndSeason.Session,
                 Season: res.data.EndSeason.Season,
                 MaxSeason: res.data.EndSeason.Season,
                 data: {...this.state.data, Context: res.data.EndSeason},

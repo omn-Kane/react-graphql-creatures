@@ -95,3 +95,13 @@ thead>tr>td {
 .wrapper {
     height: 100%;
 }
+
+.timer {
+    margin-left: auto;
+    margin-right: auto;
+    width: 205px;
+    text-align: left;
+}
+.timer-field {
+    width: 35px;
+}
