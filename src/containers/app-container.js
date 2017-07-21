@@ -1,29 +1,52 @@
 import React, { PureComponent } from 'react';
 import DataPage from '../containers/data-page/data-page';
-import CreaturesGraphql from '../connectors/creatures-graphql';
 import connector from '../connectors/app-connector';
 
 class AppContainer extends PureComponent {
+    constructor(props) {
+        super(props);
+        this.endDay = this.endDay.bind(this);
+
+        this.state = {
+            Day: props.Day,
+            MaxDay: props.MaxDay,
+            data: props.data,
+        };
+    }
+
     render() {
         return (
-            <CreaturesGraphql>
-                <div className="App">
-                    <input type='text' placeholder='Session' ref={(ref) => this.sessionInput = ref} />
-                    <input type='button' value='Submit' onClick={(e) => this.submit()} />
-                    <div>
-                        Day: {this.props.day}/{this.props.maxDay}
-                        <input type='button' value='Up' onClick={(e) => this.up()} />
-                        <input type='button' value='Down' onClick={(e) => this.down()} />
-                    </div>
-                    <div className="spacer"></div>
-                    {
-                        this.props.session ?
-                        <DataPage Session={this.props.session} Day={this.props.day} setMaxDay={this.props.setMaxDay} maxDay={this.props.maxDay}/>
-                        : null
-                    }
+            <div className="App">
+                <input type='text' placeholder='Session' ref={(ref) => this.sessionInput = ref} />
+                <input type='button' value='Submit' onClick={(e) => this.submit()} />
+                <div>
+                    Day: {this.state.Day}/{this.state.MaxDay}
+                    <input type='button' value='Up' onClick={(e) => this.up()} />
+                    <input type='button' value='Down' onClick={(e) => this.down()} />
                 </div>
-            </CreaturesGraphql>
+                <div className="spacer"></div>
+                {this.props.Session ? <DataPage {...this.props} {...this.state} endDay={this.endDay}/> : null}
+            </div>
         );
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.data && nextProps.data !== this.props.data) this.setState({data: nextProps.data});
+        if (nextProps.Day !== this.state.Day) this.setState({Day: nextProps.Day});
+    }
+
+    componentDidUpdate() {
+        if (this.state.Day === 0 && this.state.data.Context.Day !== 0) this.setState({MaxDay: this.state.data.Context.Day});
+    }
+
+    endDay(Session, Day) {
+        this.props.endDay(Session, Day).then((res) => {
+            this.setState({
+                Day: res.data.EndDay.Day,
+                MaxDay: res.data.EndDay.Day,
+                data: {...this.state.data, Context: res.data.EndDay},
+            });
+        });
     }
 
     submit() {
@@ -31,11 +54,11 @@ class AppContainer extends PureComponent {
     }
 
     up() {
-        if (this.props.day < this.props.maxDay) this.props.updateDay(this.props.day + 1);
+        if (this.state.Day < this.state.MaxDay) this.props.updateDay(this.state.Day + 1);
     }
 
     down() {
-        if (this.props.day > 0) this.props.updateDay(this.props.day - 1);
+        if (this.state.Day > 0) this.props.updateDay(this.state.Day - 1);
     }
 }
 

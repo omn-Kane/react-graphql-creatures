@@ -1,6 +1,6 @@
-import {gql, graphql} from 'react-apollo';
+import {gql, graphql, compose} from 'react-apollo';
 
-const contextQuery = gql`
+const creaturesQuery = gql`
     query Creatures($Session: String!, $Day: Int!, $Offset: Int!, $Limit: Int!) {
         Creatures(Session: $Session, Day: $Day, Offset: $Offset, Limit: $Limit) {
             ID
@@ -19,7 +19,15 @@ const contextQuery = gql`
     }
 `;
 
-const options = {
+const creatureMutation = gql`
+    mutation SetAction($Session: String!, $Day: Int!, $ID: Int!, $Action: String!) {
+        SetAction(Session: $Session, Day: $Day, ID: $ID, Action: $Action) {
+            Action
+        }
+    }
+`;
+
+const creaturesQueryOptions = {
     options(props) {
         return {
             variables: {
@@ -31,33 +39,28 @@ const options = {
             fetchPolicy: 'network-only', // See http://dev.apollodata.com/react/api-queries.html#graphql-config-options-fetchPolicy
         };
     },
-    props({data}) {
-        console.log('New Data Loading');
-        let fetchMoreCreatures = () => {};
-        if (data.Context) {
-            fetchMoreCreatures = () => {
-                data.fetchMore({
-                    variables: {
-                        Offset: data.Creatures.length,
-                    },
-                    updateQuery: (previousResult, {fetchMoreResult}) => {
-                        console.log('Updating Existing Data');
-                        if (!fetchMoreResult) return previousResult;
-                        let newThing = {...previousResult, ...fetchMoreResult};
-                        newThing.Creatures = [...previousResult.Creatures, ...fetchMoreResult.Creatures]
-                        return newThing;
-                    },
-                });
-            };
-        }
-
-        return {
-            data: {
-                ...data,
-                fetchMoreCreatures,
+    props: ({ data }) => ({
+        data: {...data},
+        fetchMoreCreatures: () => data.fetchMore({
+            variables: { Offset: data.Creatures.length },
+            updateQuery: (previousResult, {fetchMoreResult}) => {
+                if (!fetchMoreResult) return previousResult;
+                console.log('Smething', fetchMoreResult);
+                let newThing = {...previousResult, ...fetchMoreResult};
+                newThing.Creatures = [...previousResult.Creatures, ...fetchMoreResult.Creatures]
+                return newThing;
             },
-        };
-    },
+        }),
+    }),
 };
 
-export default graphql(contextQuery, options);
+const creatureMutationOptions = {
+    props: ({ mutate }) => ({
+        setAction: (Session, Day, ID, Action) => mutate({ variables: { Session, Day, ID, Action } }),
+    })
+};
+
+export default compose(
+    graphql(creaturesQuery, creaturesQueryOptions),
+    graphql(creatureMutation, creatureMutationOptions),
+);

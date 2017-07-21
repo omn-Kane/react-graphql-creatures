@@ -2,13 +2,17 @@ import React, {PureComponent} from 'react';
 import connector from '../connectors/creature-connector';
 
 class Creatures extends PureComponent {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.handleScroll = this.handleScroll.bind(this);
+
+        this.state = {
+            data: props.data,
+        };
     }
 
     render() {
-        const { data: { loading, error, Creatures } } = this.props;
+        const { data: { loading, error, Creatures } } = this.state;
 
         if (loading && !Creatures) return <tbody key="tbody" className="scroller-y"><tr><td>Loading ...</td></tr></tbody>;
         if (error) return <tbody key="tbody" className="scroller-y"><tr><td>{error.message}</td></tr></tbody>;
@@ -28,12 +32,12 @@ class Creatures extends PureComponent {
                     {
                         creature.Stats.Age > 2 && this.props.allowActions ?
                         <div>
-                            <input type="button" value="Nothing" onClick={() => this.setInstruction(this.props.Session, creature.ID, 'Nothing')}/>
-                            <input type="button" value="Breed" onClick={() => this.setInstruction(this.props.Session, creature.ID, 'Breeding')}/>
-                            <input type="button" value="Farm" onClick={() => this.setInstruction(this.props.Session, creature.ID, 'Farming')}/>
-                            <input type="button" value="Lumberjack" onClick={() => this.setInstruction(this.props.Session, creature.ID, 'Lumberjacking')}/>
-                            <input type="button" value="Construct" onClick={() => this.setInstruction(this.props.Session, creature.ID, 'Constructing')}/>
-                            <input type="button" value="Sell" onClick={() => this.setInstruction(this.props.Session, creature.ID, 'Sell')}/>
+                            <input type="button" value="Nothing" onClick={() => this.setAction(creature.ID, 'Nothing')}/>
+                            <input type="button" value="Breed" onClick={() => this.setAction(creature.ID, 'Breeding')}/>
+                            <input type="button" value="Farm" onClick={() => this.setAction(creature.ID, 'Farming')}/>
+                            <input type="button" value="Lumberjack" onClick={() => this.setAction(creature.ID, 'Lumberjacking')}/>
+                            <input type="button" value="Construct" onClick={() => this.setAction(creature.ID, 'Constructing')}/>
+                            <input type="button" value="Sell" onClick={() => this.setAction(creature.ID, 'Sell')}/>
                         </div>
                         : null
                     }
@@ -56,6 +60,10 @@ class Creatures extends PureComponent {
         document.getElementsByClassName('scroller-y')[0].removeEventListener('scroll', this.handleScroll);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.data && nextProps.data !== this.props.data) this.setState({data: nextProps.data});
+    }
+
     componentWillUpdate(nextProps) {
         // This will add more creatures if you have more than 10 creatures and the current number of creatures loaded is 10
         if (nextProps.creatureCount > 10 && nextProps.data.Creatures && nextProps.data.Creatures.length === 10) {
@@ -70,8 +78,14 @@ class Creatures extends PureComponent {
         }
     }
 
-    setInstruction(args) {
-        this.props.data.setInstruction(args);
+    setAction(ID, Action) {
+        this.props.setAction(this.props.Session, this.props.Day, ID, Action).then((res) => {
+            const newCreatures = this.state.data.Creatures.map((creature) => {
+                if (creature.ID !== ID) return creature;
+                return {...creature, Action: res.data.SetAction.Action}
+            });
+            this.setState({ data: {...this.state.data, Creatures: newCreatures} });
+        });
     }
 };
 

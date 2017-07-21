@@ -1,7 +1,6 @@
 import React, {PureComponent} from 'react';
 import './style.css'
 import Creatures from '../../components/creatures';
-import connector from '../../connectors/data-page-connector';
 
 class DataPage extends PureComponent {
     render() {
@@ -24,7 +23,7 @@ class DataPage extends PureComponent {
                     <span>Creatures Cost: {Context.Play.CreaturesCost}</span>
                     <span>Current Day: {Context.Day}</span>
                 </div>
-                <div className="end-day-button" onClick={() => this.endDay()}><span>End Day</span></div>
+                <div className="end-day-button"><span onClick={() => this.props.endDay(Context.Session, Context.Day)}>End Day</span></div>
                 <table className="table">
                     <thead className="tableheader">
                         <tr>
@@ -41,19 +40,11 @@ class DataPage extends PureComponent {
                             <td className="scroller"></td>
                         </tr>
                     </thead>
-                    <Creatures Session={Session} Day={Day} creatureCount={Context.Play.CreatureCount} allowActions={Context.Day === this.props.maxDay} />
+                    <Creatures Session={Session} Day={Day} creatureCount={Context.Play.CreatureCount} allowActions={Context.Day === this.props.MaxDay} />
                 </table>
             </div>
         );
     }
-
-    componentDidUpdate() {
-        if (this.props.Day === 0 && this.props.data.Context.Day !== 0) this.props.setMaxDay(this.props.data.Context.Day);
-    }
-
-    endDay() {
-
-    }
 }
 
-export default connector(DataPage);
+export default DataPage;

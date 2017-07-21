@@ -5,6 +5,9 @@ import App from './containers/app-container';
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import reducers from './reducers';
-let store = createStore(reducers)
+import CreaturesGraphql from './connectors/creatures-graphql';
 
-ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+
+let store = createStore(reducers);
+
+ReactDOM.render(<Provider store={store}><CreaturesGraphql><App /></CreaturesGraphql></Provider>, document.getElementById('root'));
