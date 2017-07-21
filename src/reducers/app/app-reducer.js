@@ -2,7 +2,7 @@ import * as constants from '../constants';
 
 const initialState = {
     session: "",
-    day: 0,
+    season: 0,
 };
 
 export default function appStore(state = initialState, action = {}) {
@@ -12,10 +12,10 @@ export default function appStore(state = initialState, action = {}) {
                 ...state,
                 session: action.session,
             };
-        case constants.UPDATE_DAY:
+        case constants.UPDATE_SEASON:
             return {
                 ...state,
-                day: action.day,
+                season: action.season,
             };
         default:
             return state;

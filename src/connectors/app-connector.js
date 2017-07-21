@@ -1,12 +1,12 @@
 import {gql, graphql, compose} from 'react-apollo';
 import {connect} from 'react-redux';
-import {updateSession, updateDay} from '../reducers/app/app-actions';
+import {updateSession, updateSeason} from '../reducers/app/app-actions';
 
 const fragments = {
     dataPage: gql`
         fragment DataPage on Context {
             Session
-            Day
+            Season
             Play {
                 Food
                 Lumber
@@ -19,17 +19,17 @@ const fragments = {
 };
 
 const contextQuery = gql`
-    query Context($Session: String, $Day: Int) {
-        Context(Session: $Session, Day: $Day) {
+    query Context($Session: String, $Season: Int) {
+        Context(Session: $Session, Season: $Season) {
             ...DataPage
         }
     }
     ${fragments.dataPage}
 `;
 
-const endDayMutation = gql`
-    mutation EndDay($Session: String!) {
-        EndDay(Session: $Session) {
+const endSeasonMutation = gql`
+    mutation EndSeason($Session: String!) {
+        EndSeason(Session: $Session) {
             ...DataPage
         }
     }
@@ -38,22 +38,22 @@ const endDayMutation = gql`
 
 const mapStateToProps = (state, ownProps) => ({
     Session: state.appStore.session,
-    Day: state.appStore.day,
+    Season: state.appStore.season,
 });
 
 const mapDispatchToProps = {
     updateSession,
-    updateDay,
+    updateSeason,
 };
 
-const endDayMutationOptions = {
+const endSeasonMutationOptions = {
     props: ({ mutate }) => ({
-        endDay: (Session, Day) => mutate({ variables: { Session, Day } }),
+        endSeason: (Session, Season) => mutate({ variables: { Session, Season } }),
     })
 };
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     graphql(contextQuery),
-    graphql(endDayMutation, endDayMutationOptions),
+    graphql(endSeasonMutation, endSeasonMutationOptions),
 );

@@ -21,9 +21,9 @@ class DataPage extends PureComponent {
                 <div className="resources">
                     <span>Creatures: {Context.Play.CreatureCount}/{Context.Play.Housing}</span>
                     <span>Creatures Cost: {Context.Play.CreaturesCost}</span>
-                    <span>Current Day: {Context.Day}</span>
+                    <span>Current Season: {Context.Season}</span>
                 </div>
-                <div className="end-day-button"><span onClick={() => this.props.endDay(Context.Session, Context.Day)}>End Day</span></div>
+                <div className="end-season-button"><span onClick={() => this.props.endSeason(Context.Session, Context.Season)}>End Season</span></div>
                 <table className="table">
                     <thead className="tableheader">
                         <tr>
@@ -39,7 +39,7 @@ class DataPage extends PureComponent {
                             <td className="scroller"></td>
                         </tr>
                     </thead>
-                    <Creatures Session={Context.Session} Day={Context.Day} creatureCount={Context.Play.CreatureCount} allowActions={Context.Day === this.props.MaxDay} />
+                    <Creatures Session={Context.Session} Season={Context.Season} creatureCount={Context.Play.CreatureCount} allowActions={Context.Season === this.props.MaxSeason} />
                 </table>
             </div>
         );

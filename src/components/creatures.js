@@ -78,8 +78,7 @@ class Creatures extends PureComponent {
     }
 
     setAction(ID, Action) {
-        console.log('WOOT', this.props.Session, this.props.Day)
-        this.props.setAction(this.props.Session, this.props.Day, ID, Action).then((res) => {
+        this.props.setAction(this.props.Session, this.props.Season, ID, Action).then((res) => {
             const newCreatures = this.state.data.Creatures.map((creature) => {
                 if (creature.ID !== ID) return creature;
                 return {...creature, Action: res.data.SetAction.Action}

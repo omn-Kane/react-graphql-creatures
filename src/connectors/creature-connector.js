@@ -1,8 +1,8 @@
 import {gql, graphql, compose} from 'react-apollo';
 
 const creaturesQuery = gql`
-    query Creatures($Session: String!, $Day: Int!, $Offset: Int!, $Limit: Int!) {
-        Creatures(Session: $Session, Day: $Day, Offset: $Offset, Limit: $Limit) {
+    query Creatures($Session: String!, $Season: Int!, $Offset: Int!, $Limit: Int!) {
+        Creatures(Session: $Session, Season: $Season, Offset: $Offset, Limit: $Limit) {
             ID
             Sex
             Action
@@ -19,8 +19,8 @@ const creaturesQuery = gql`
 `;
 
 const creatureMutation = gql`
-    mutation SetAction($Session: String!, $Day: Int!, $ID: Int!, $Action: String!) {
-        SetAction(Session: $Session, Day: $Day, ID: $ID, Action: $Action) {
+    mutation SetAction($Session: String!, $Season: Int!, $ID: Int!, $Action: String!) {
+        SetAction(Session: $Session, Season: $Season, ID: $ID, Action: $Action) {
             Action
         }
     }
@@ -31,7 +31,7 @@ const creaturesQueryOptions = {
         return {
             variables: {
                 Session: props.Session,
-                Day: props.Day,
+                Season: props.Season,
                 Offset: 0,
                 Limit: 10,
             },
@@ -55,7 +55,7 @@ const creaturesQueryOptions = {
 
 const creatureMutationOptions = {
     props: ({ mutate }) => ({
-        setAction: (Session, Day, ID, Action) => mutate({ variables: { Session, Day, ID, Action } }),
+        setAction: (Session, Season, ID, Action) => mutate({ variables: { Session, Season, ID, Action } }),
     })
 };
 

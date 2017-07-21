@@ -7,10 +7,9 @@ export const updateSession = (session) => {
     }
 }
 
-
-export const updateDay = (day) => {
+export const updateSeason = (season) => {
     return {
-        type: constants.UPDATE_DAY,
-        day
+        type: constants.UPDATE_SEASON,
+        season
     }
 }
