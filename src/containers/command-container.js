@@ -1,13 +1,16 @@
 import React, {PureComponent} from 'react';
+import connector from '../connectors/command-connector';
 
 class CommandContainer extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
+            commandID: props.commandID,
             action: '',
             stat: '',
             direction: '',
-            value: '',
+            value: 0,
+            editing: false,
         };
     }
 
@@ -16,11 +19,23 @@ class CommandContainer extends PureComponent {
             <div>
                 { !this.state.action ? this.displayActions() : null}
                 { !this.state.stat && this.state.action ? this.displayStats() : null}
-                { !this.state.direction && this.state.stat ? this.displayDirection() : null}
-                { !this.state.value && this.state.direction ? this.displayValueSelector() : null}
-                { this.state.value !== '' ? this.displayCommand() : null}
+                { !this.state.direction && this.state.stat && this.state.action ? this.displayDirection() : null}
+                { this.state.direction && this.state.stat && this.state.action ? this.displayCommand() : null}
             </div>
         );
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            action: nextProps.action,
+            stat: nextProps.stat,
+            direction: nextProps.direction,
+            value: nextProps.value,
+        });
+    }
+
+    componentDidUpdate() {
+        this.props.updateCommand(this.state);
     }
 
     setAction(action) {
@@ -35,12 +50,16 @@ class CommandContainer extends PureComponent {
         this.setState({direction});
     }
 
-    setRefValue(value) {
-        this.valueInput.value = parseInt(this.valueInput.value) + value; // eslint-disable-line
+    lowerValue() {
+        if (this.state.value > 0) this.setState({value: this.state.value - 1});
+    }
+
+    higherValue() {
+        this.setState({value: this.state.value + 1});
     }
 
     setValue() {
-        this.setState({value: this.valueInput.value});
+        if (!isNaN(this.valueInput.value) && this.valueInput.value !== '') this.setState({value: parseInt(this.valueInput.value)}); // eslint-disable-line
     }
 
     displayActions() {
@@ -59,7 +78,8 @@ class CommandContainer extends PureComponent {
     displayStats() {
         return (
             <div>
-                <span>{this.state.action} when: </span>
+                <input type='button' value={this.state.action} onClick={(e) => this.setAction('')} />
+                <span> when </span>
                 <input type='button' value='Age' onClick={(e) => this.setStat('Age')} />
                 <input type='button' value='Longevity' onClick={(e) => this.setStat('Longevity')} />
                 <input type='button' value='Farming' onClick={(e) => this.setStat('Farming')} />
@@ -73,21 +93,12 @@ class CommandContainer extends PureComponent {
     displayDirection() {
         return (
             <div>
-                <span>{this.state.action} when {this.state.stat} is: </span>
+                <input type='button' value={this.state.action} onClick={(e) => this.setAction('')} />
+                <span> when </span>
+                <input type='button' value={this.state.stat} onClick={(e) => this.setStat('')} />
+                <span> is </span>
                 <input type='button' value='Above' onClick={(e) => this.setDirection('Above')} />
                 <input type='button' value='Below' onClick={(e) => this.setDirection('Below')} />
-            </div>
-        );
-    }
-
-    displayValueSelector() {
-        return (
-            <div>
-                <span>{this.state.action} when {this.state.stat} is {this.state.direction}: </span>
-                <input type='text' className="timer-field" placeholder='Value' defaultValue='0' ref={(ref) => this.valueInput = ref} />
-                <input type='button' value='^' onClick={(e) => this.setRefValue(1)} />
-                <input type='button' value='v' onClick={(e) => this.setRefValue(-1)} />
-                <input type='button' value='Save' onClick={(e) => this.setValue()} />
             </div>
         );
     }
@@ -95,11 +106,20 @@ class CommandContainer extends PureComponent {
     displayCommand() {
         return (
             <div>
-                <span>{this.state.action} when {this.state.stat} is {this.state.direction} {this.state.value} </span>
-                <input type='button' value='Remove' onClick={(e) => this.props.removeCommand()} />
+                <input type='button' value={this.state.action} onClick={(e) => this.setAction('')} />
+                <span> when </span>
+                <input type='button' value={this.state.stat} onClick={(e) => this.setStat('')} />
+                <span> is </span>
+                <input type='button' value={this.state.direction} onClick={(e) => this.setDirection('')} />
+                <span> </span>
+                <input type='text' className="timer-field" value={this.state.value} ref={(ref) => this.valueInput = ref} onChange={() => this.setValue()}/>
+                <input type='button' value='^' onClick={(e) => this.higherValue()} />
+                <input type='button' value='v' onClick={(e) => this.lowerValue()} />
+                <span> </span>
+                <input type='button' value='Remove' onClick={(e) => this.props.removeCommand(this.props.commandID)} />
             </div>
         );
     }
 }
 
-export default CommandContainer;
+export default connector(CommandContainer);

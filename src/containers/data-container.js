@@ -1,6 +1,5 @@
 import React, {PureComponent} from 'react';
-import './style.css'
-import Creatures from '../../components/creatures';
+import Creatures from '../components/creatures';
 
 class DataPage extends PureComponent {
     render() {

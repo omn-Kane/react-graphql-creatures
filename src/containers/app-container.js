@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import DataPage from '../containers/data-page/data-page';
+import DataPage from '../containers/data-container';
 import Automator from '../containers/automator-container';
 import connector from '../connectors/app-connector';
 

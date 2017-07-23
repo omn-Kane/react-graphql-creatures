@@ -1,2 +1,8 @@
 export const UPDATE_SESSION = "UPDATE_SESSION";
 export const UPDATE_SEASON = "UPDATE_SEASON";
+
+export const SET_AUTOMATING = "SET_AUTOMATING";
+
+export const ADD_COMMAND = "ADD_COMMAND";
+export const UPDATE_COMMAND = "UPDATE_COMMAND";
+export const REMOVE_COMMAND = "REMOVE_COMMAND";
