@@ -1,5 +1,6 @@
 import React, {PureComponent} from 'react';
 import connector from '../connectors/creature-connector';
+import {dynamicSort} from '../utils/utils';
 
 class Creatures extends PureComponent {
     constructor(props) {
@@ -8,6 +9,7 @@ class Creatures extends PureComponent {
 
         this.state = {
             data: props.data,
+            needsAutomating: true,
         };
     }
 
@@ -32,10 +34,10 @@ class Creatures extends PureComponent {
                         creature.Stats.Age > 2 && this.props.allowActions ?
                         <div>
                             <input type="button" value="Nothing" onClick={() => this.setAction(creature.ID, 'Nothing')}/>
-                            <input type="button" value="Breed" onClick={() => this.setAction(creature.ID, 'Breeding')}/>
-                            <input type="button" value="Farm" onClick={() => this.setAction(creature.ID, 'Farming')}/>
-                            <input type="button" value="Lumberjack" onClick={() => this.setAction(creature.ID, 'Lumberjacking')}/>
-                            <input type="button" value="Construct" onClick={() => this.setAction(creature.ID, 'Constructing')}/>
+                            <input type="button" value="Breed" onClick={() => this.setAction(creature.ID, 'Breed')}/>
+                            <input type="button" value="Farm" onClick={() => this.setAction(creature.ID, 'Farm')}/>
+                            <input type="button" value="Lumberjack" onClick={() => this.setAction(creature.ID, 'Lumberjack')}/>
+                            <input type="button" value="Construct" onClick={() => this.setAction(creature.ID, 'Construct')}/>
                             <input type="button" value="Sell" onClick={() => this.setAction(creature.ID, 'Sell')}/>
                         </div>
                         : null
@@ -60,13 +62,39 @@ class Creatures extends PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.data && nextProps.data !== this.props.data) this.setState({data: nextProps.data});
+        // if (nextProps.data && nextProps.data !== this.props.data) this.setState({data: nextProps.data});
+        if (nextProps.Season !== this.props.Season || (nextProps.data && nextProps.data !== this.props.data)) this.setState({data: nextProps.data, needsAutomating: true});
     }
 
     componentWillUpdate(nextProps) {
         // This will add more creatures if you have more than 10 creatures and the current number of creatures loaded is 10
         if (nextProps.creatureCount > 10 && nextProps.data.Creatures && nextProps.data.Creatures.length === 10) {
             nextProps.data.fetchMoreCreatures();
+        }
+    }
+
+    componentDidUpdate() {
+        if (this.state.needsAutomating && this.props.automating && this.props.allowActions && Object.keys(this.props.commands).length > 0) {
+            let creatures = [];
+            this.state.data.Creatures.forEach((creature) => {
+                if (creature.Action !== 'Pregnant' && creature.Action !== 'Spawning') creatures.push(creature);
+            });
+
+            let commands = Object.values(this.props.commands);
+            commands.sort(dynamicSort('commandID'));
+            commands.forEach((command) => {
+                let newCreaturesList = []
+                creatures.forEach((creature, index) => {
+                    if ((command.direction === 'Above' && creature.Stats[command.stat] > command.value) ||
+                        (command.direction === 'Below' && creature.Stats[command.stat] < command.value)) {
+                        this.setAction(creature.ID, command.action);
+                    } else {
+                        newCreaturesList.push(creature)
+                    }
+                    creatures = newCreaturesList;
+                });
+            });
+            this.setState({needsAutomating: false});
         }
     }
 

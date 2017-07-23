@@ -5,6 +5,7 @@ import setCreatureAction from '../graphql/set-creature-action';
 
 const mapStateToProps = (state, ownProps) => ({
     automating: state.automatorStore.automating,
+    commands: state.commandStore.commands,
 });
 
 export default compose(

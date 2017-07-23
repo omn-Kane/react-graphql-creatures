@@ -14,20 +14,20 @@ class Automator extends PureComponent {
     render() {
         return (
             <div>
+                {this.displayCommands()}
+                <input type='button' value='New Command' onClick={(e) => this.props.addCommand()} />
+                <div className="spacer"></div>
                 {
                     !this.props.automating ?
                     <input type='button' value='Activate Automation' onClick={(e) => this.props.setAutomating(true)} />
                     :
                     <div>
-                        <input type='button' value='Disable Automation' onClick={(e) => this.props.setAutomating(true)} />
+                        <input type='button' value='Disable Automation' onClick={(e) => this.props.setAutomating(false)} />
                         <div className="timer">
                             <input type='button' value='Stop Timer' onClick={(e) => this.stopTimer()} />
                             <input type='text' className="timer-field" placeholder='timer' defaultValue="1000" ref={(ref) => this.timerInput = ref} />
                             <input type='button' value='Activate Timer' onClick={(e) => this.activateTimer()} />
                         </div>
-
-                        {this.displayCommands()}
-                        <input type='button' value='New Command' onClick={(e) => this.props.addCommand()} />
                     </div>
                 }
             </div>
