@@ -28,12 +28,6 @@ class Automator extends PureComponent {
     }
 
     componentDidMount() {
-        const sellFemaleCommand = {
-            action: 'Sell',
-            numberOfCreatures: -1,
-            stat: 'Sex',
-            sex: 'Female',
-        };
         const sellMultiBirthCommand = {
             action: 'Sell',
             numberOfCreatures: -1,
@@ -56,7 +50,6 @@ class Automator extends PureComponent {
             value: 20,
         };
 
-        this.props.addCommand(sellFemaleCommand);
         this.props.addCommand(breedCommand);
         this.props.addCommand(sellEpiceneCommand);
         this.props.addCommand(sellMultiBirthCommand);

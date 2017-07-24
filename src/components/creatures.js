@@ -82,6 +82,7 @@ class Creatures extends PureComponent {
             });
             creatures.sort(dynamicSort('ID'));
             let commands = Object.values(this.props.commands);
+            let creatureCommands = [];
             commands.sort(dynamicSort('orderID'));
             commands.forEach((command) => {
                 let newCreaturesList = [];
@@ -90,7 +91,7 @@ class Creatures extends PureComponent {
                     if (numberOfCreatures < command.numberOfCreatures || command.numberOfCreatures === -1) {
                         if (command.stat === 'Sex') {
                             if (creature.Sex === command.sex) {
-                                this.setAction(creature.ID, command.action);
+                                creatureCommands.push({ID: creature.ID, Action: command.action});
                                 ++numberOfCreatures;
                             } else {
                                 newCreaturesList.push(creature);
@@ -98,7 +99,7 @@ class Creatures extends PureComponent {
                         } else {
                             if ((command.direction === 'Above' && creature.Stats[command.stat] > command.value) ||
                                 (command.direction === 'Below' && creature.Stats[command.stat] < command.value)) {
-                                this.props.setAction(this.props.Session, this.props.Season, creature.ID, command.action);
+                                creatureCommands.push({ID: creature.ID, Action: command.action});
                                 ++numberOfCreatures;
                             } else {
                                 newCreaturesList.push(creature);
@@ -111,6 +112,7 @@ class Creatures extends PureComponent {
                 });
             });
             if (this.props.isTimerActive) {
+                this.props.setBulkActions(this.props.Session, this.props.Season, creatureCommands);
                 this.runTimer();
             }
         }
