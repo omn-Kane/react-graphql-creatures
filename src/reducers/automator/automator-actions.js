@@ -6,3 +6,16 @@ export const setAutomating = (automating) => {
         automating
     }
 }
+
+export const activateTimer = (timer) => {
+    return {
+        type: constants.ACTIVATE_TIMER,
+        timer,
+    }
+}
+
+export const stopTimer = () => {
+    return {
+        type: constants.STOP_TIMER,
+    }
+}

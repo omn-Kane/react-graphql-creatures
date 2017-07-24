@@ -62,57 +62,83 @@ class Creatures extends PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        // if (nextProps.data && nextProps.data !== this.props.data) this.setState({data: nextProps.data});
-        if (nextProps.Season !== this.props.Season || (nextProps.data && nextProps.data !== this.props.data)) this.setState({data: nextProps.data, needsAutomating: true});
+        if (nextProps.data && nextProps.data !== this.props.data) this.setState({data: nextProps.data});
+        if (nextProps.Season !== this.props.Season) this.setState({needsAutomating: true});
     }
 
     componentWillUpdate(nextProps) {
         // This will add more creatures if you have more than 10 creatures and the current number of creatures loaded is 10
         if (nextProps.creatureCount > 10 && nextProps.data.Creatures && nextProps.data.Creatures.length === 10) {
-            nextProps.data.fetchMoreCreatures();
+            // nextProps.fetchMoreCreatures();
         }
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
         if (this.state.needsAutomating && this.props.automating && this.props.allowActions && Object.keys(this.props.commands).length > 0) {
+            this.setState({needsAutomating: false});
             let creatures = [];
             this.state.data.Creatures.forEach((creature) => {
                 if (creature.Action !== 'Pregnant' && creature.Action !== 'Spawning') creatures.push(creature);
             });
-
+            creatures.sort(dynamicSort('ID'));
             let commands = Object.values(this.props.commands);
-            commands.sort(dynamicSort('commandID'));
+            commands.sort(dynamicSort('orderID'));
             commands.forEach((command) => {
-                let newCreaturesList = []
+                let newCreaturesList = [];
+                let numberOfCreatures = 0;
                 creatures.forEach((creature, index) => {
-                    if ((command.direction === 'Above' && creature.Stats[command.stat] > command.value) ||
-                        (command.direction === 'Below' && creature.Stats[command.stat] < command.value)) {
-                        this.setAction(creature.ID, command.action);
+                    if (numberOfCreatures < command.numberOfCreatures || command.numberOfCreatures === -1) {
+                        if (command.stat === 'Sex') {
+                            if (creature.Sex === command.sex) {
+                                this.setAction(creature.ID, command.action);
+                                ++numberOfCreatures;
+                            } else {
+                                newCreaturesList.push(creature);
+                            }
+                        } else {
+                            if ((command.direction === 'Above' && creature.Stats[command.stat] > command.value) ||
+                                (command.direction === 'Below' && creature.Stats[command.stat] < command.value)) {
+                                this.props.setAction(this.props.Session, this.props.Season, creature.ID, command.action);
+                                ++numberOfCreatures;
+                            } else {
+                                newCreaturesList.push(creature);
+                            }
+                        }
                     } else {
-                        newCreaturesList.push(creature)
+                        newCreaturesList.push(creature);
                     }
                     creatures = newCreaturesList;
                 });
             });
-            this.setState({needsAutomating: false});
+            if (this.props.isTimerActive) {
+                this.runTimer();
+            }
         }
     }
 
     handleScroll({target: {scrollTop, offsetHeight, scrollHeight}}) {
         if (this.props.data.Creatures.length !== this.props.creatureCount && scrollTop + offsetHeight === scrollHeight) {
             console.log('Load More');
-            this.props.data.fetchMoreCreatures();
+            this.props.fetchMoreCreatures();
         }
     }
 
     setAction(ID, Action) {
-        this.props.setAction(this.props.Session, this.props.Season, ID, Action).then((res) => {
-            const newCreatures = this.state.data.Creatures.map((creature) => {
-                if (creature.ID !== ID) return creature;
-                return {...creature, Action: res.data.SetAction.Action}
+        this.props.setAction(this.props.Session, this.props.Season, ID, Action)
+            .then((res) => {
+                if (!this.props.isTimerActive) {
+                    const newCreatures = this.state.data.Creatures.map((creature) => {
+                        if (creature.ID !== ID) return creature;
+                        return {...creature, Action: res.data.SetAction.Action}
+                    });
+                    this.setState({ data: {...this.state.data, Creatures: newCreatures} });
+                }
             });
-            this.setState({ data: {...this.state.data, Creatures: newCreatures} });
-        });
+    }
+
+    runTimer() {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => this.props.endSeason(this.props.Session, this.props.Season), this.props.timer);
     }
 };
 

@@ -41,7 +41,7 @@ class AppContainer extends PureComponent {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.state.Season === 0 && this.state.data.Context.Season !== 0) this.setState({MaxSeason: this.state.data.Context.Season});
+        if (this.state.Season === 0 && this.state.data && this.state.data.Context && this.state.data.Context.Season !== 0) this.setState({MaxSeason: this.state.data.Context.Season});
     }
 
     endSeason(Session, Season) {

@@ -1,7 +1,7 @@
 import {gql, graphql} from 'react-apollo';
 
 export const creaturesQuery = gql`
-    query Creatures($Session: String!, $Season: Int!, $Offset: Int!, $Limit: Int!) {
+    query Creatures($Session: String!, $Season: Int!, $Offset: Int, $Limit: Int) {
         Creatures(Session: $Session, Season: $Season, Offset: $Offset, Limit: $Limit) {
             ID
             Sex
@@ -24,8 +24,8 @@ const creaturesQueryOptions = {
             variables: {
                 Session: props.Session,
                 Season: props.Season,
-                Offset: 0,
-                Limit: 10,
+                // Offset: 0,
+                // Limit: 10,
             },
             fetchPolicy: 'network-only', // See http://dev.apollodata.com/react/api-queries.html#graphql-config-options-fetchPolicy
         };

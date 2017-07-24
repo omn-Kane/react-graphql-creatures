@@ -105,3 +105,11 @@ thead>tr>td {
 .timer-field {
     width: 35px;
 }
+.inline {
+    display: inline-block;
+    padding-right: 5px;
+}
+.command-remove {
+    display: inline-block;
+    padding-right: 20px;
+}

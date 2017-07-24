@@ -1,16 +1,9 @@
 import React, {PureComponent} from 'react';
 import Command from '../containers/command-container';
 import connector from '../connectors/automator-connector';
+import {dynamicSort} from '../utils/utils';
 
 class Automator extends PureComponent {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            commands: {},
-        };
-    }
-
     render() {
         return (
             <div>
@@ -24,9 +17,9 @@ class Automator extends PureComponent {
                     <div>
                         <input type='button' value='Disable Automation' onClick={(e) => this.props.setAutomating(false)} />
                         <div className="timer">
-                            <input type='button' value='Stop Timer' onClick={(e) => this.stopTimer()} />
+                            <input type='button' value='Stop Timer' onClick={(e) => this.props.stopTimer()} />
                             <input type='text' className="timer-field" placeholder='timer' defaultValue="1000" ref={(ref) => this.timerInput = ref} />
-                            <input type='button' value='Activate Timer' onClick={(e) => this.activateTimer()} />
+                            <input type='button' value='Activate Timer' onClick={(e) => this.props.activateTimer(this.timerInput.value)} />
                         </div>
                     </div>
                 }
@@ -34,25 +27,45 @@ class Automator extends PureComponent {
         );
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevProps.Session !== this.props.Session) clearInterval(this.timer);
+    componentDidMount() {
+        const sellFemaleCommand = {
+            action: 'Sell',
+            numberOfCreatures: -1,
+            stat: 'Sex',
+            sex: 'Female',
+        };
+        const sellMultiBirthCommand = {
+            action: 'Sell',
+            numberOfCreatures: -1,
+            stat: 'MultiBirthChance',
+            direction: 'Below',
+            value: 115,
+        };
+        const sellEpiceneCommand = {
+            action: 'Sell',
+            numberOfCreatures: -1,
+            stat: 'EpiceneChance',
+            direction: 'Below',
+            value: 95,
+        };
+        const breedCommand = {
+            action: 'Breed',
+            numberOfCreatures: 30,
+            stat: 'Age',
+            direction: 'Above',
+            value: 20,
+        };
+
+        this.props.addCommand(sellFemaleCommand);
+        this.props.addCommand(breedCommand);
+        this.props.addCommand(sellEpiceneCommand);
+        this.props.addCommand(sellMultiBirthCommand);
     }
 
     displayCommands() {
-        return Object.values(this.props.commands).map((command) => {
-            return <Command key={command.commandID} commandID={command.commandID} action={command.action} stat={command.stat} direction={command.direction} value={command.value} />
+        return Object.values(this.props.commands).sort(dynamicSort('orderID')).map((command) => {
+            return <Command key={command.commandID} {...command} />
         });
-    }
-
-    activateTimer() {
-        clearInterval(this.timer);
-        this.timer = setInterval(() => {
-            this.state.automating ? this.props.endSeason(this.props.Session, this.props.Season) : clearInterval(this.timer);
-        }, this.timerInput.value);
-    }
-
-    stopTimer() {
-        clearInterval(this.timer);
     }
 }
 

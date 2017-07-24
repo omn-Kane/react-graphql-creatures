@@ -1,5 +1,5 @@
 import {connect} from 'react-redux';
-import {setAutomating} from '../reducers/automator/automator-actions';
+import {setAutomating, activateTimer, stopTimer} from '../reducers/automator/automator-actions';
 import {addCommand} from '../reducers/command/command-actions';
 
 const mapStateToProps = (state, ownProps) => ({
@@ -9,6 +9,8 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = {
     setAutomating,
+    activateTimer,
+    stopTimer,
     addCommand,
 };
 

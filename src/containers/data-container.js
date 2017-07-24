@@ -15,7 +15,7 @@ class DataPage extends PureComponent {
                 <div className="resources">
                     <span>Food: {Context.Play.Food}</span>
                     <span>Lumber: {Context.Play.Lumber}</span>
-                    <span>Housing Cost: {Context.Play.Housing}</span>
+                    <span>Housing Cost: {Context.Play.Housing * Context.Play.Housing}</span>
                 </div>
                 <div className="resources">
                     <span>Creatures: {Context.Play.CreatureCount}/{Context.Play.Housing}</span>
@@ -38,7 +38,12 @@ class DataPage extends PureComponent {
                             <td className="scroller"></td>
                         </tr>
                     </thead>
-                    <Creatures Session={Context.Session} Season={Context.Season} creatureCount={Context.Play.CreatureCount} allowActions={Context.Season === this.props.MaxSeason} />
+                    <Creatures
+                        Session={Context.Session}
+                        Season={Context.Season}
+                        creatureCount={Context.Play.CreatureCount}
+                        allowActions={Context.Season === this.props.MaxSeason}
+                        endSeason={this.props.endSeason}/>
                 </table>
             </div>
         );
