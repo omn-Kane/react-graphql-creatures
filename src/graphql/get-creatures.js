@@ -20,13 +20,13 @@ export const creaturesQuery = gql`
 
 const creaturesQueryOptions = {
     options(props) {
+        let variables = {Session: props.Session, Season: props.Season};
+        if (props.usePagination) {
+            variables.Offset = 0;
+            variables.Limit = 10;
+        }
         return {
-            variables: {
-                Session: props.Session,
-                Season: props.Season,
-                // Offset: 0,
-                // Limit: 10,
-            },
+            variables,
             fetchPolicy: 'network-only', // See http://dev.apollodata.com/react/api-queries.html#graphql-config-options-fetchPolicy
         };
     },
@@ -36,7 +36,6 @@ const creaturesQueryOptions = {
             variables: { Offset: data.Creatures.length },
             updateQuery: (previousResult, {fetchMoreResult}) => {
                 if (!fetchMoreResult) return previousResult;
-                console.log('Smething', fetchMoreResult);
                 let newThing = {...previousResult, ...fetchMoreResult};
                 newThing.Creatures = [...previousResult.Creatures, ...fetchMoreResult.Creatures]
                 return newThing;

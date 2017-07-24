@@ -9,6 +9,7 @@ const mapStateToProps = (state, ownProps) => ({
     isTimerActive: state.automatorStore.isTimerActive,
     timer: state.automatorStore.timer,
     commands: state.commandStore.commands,
+    usePagination: false,
 });
 
 export default compose(

@@ -68,8 +68,8 @@ class Creatures extends PureComponent {
 
     componentWillUpdate(nextProps) {
         // This will add more creatures if you have more than 10 creatures and the current number of creatures loaded is 10
-        if (nextProps.creatureCount > 10 && nextProps.data.Creatures && nextProps.data.Creatures.length === 10) {
-            // nextProps.fetchMoreCreatures();
+        if (nextProps.usePagination && nextProps.creatureCount > 10 && nextProps.data.Creatures && nextProps.data.Creatures.length === 10) {
+            nextProps.fetchMoreCreatures();
         }
     }
 
